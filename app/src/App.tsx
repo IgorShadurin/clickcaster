@@ -121,7 +121,12 @@ function App() {
               <ul className="nav mx-n4">
                 <li className="nav-item">
                   <a target="_blank" href="https://twitter.com/ClickCaster" className="nav-link text-lg text-muted text-primary-hover">
-                    <i className="bi bi-twitter"></i>
+                    <i className="bi bi-twitter-x"></i>
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a target="_blank" href="https://warpcast.com/clickcaster" className="nav-link text-lg text-muted text-primary-hover">
+                    <i className="bi bi-eye"></i>
                   </a>
                 </li>
               </ul>
