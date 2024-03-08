@@ -6,6 +6,8 @@ They launched Frames technology, allowing the creation of applications within th
 
 With our traffic exchange platform, Frames developers can exchange users, which will stimulate engagement in Web3 projects.
 
+[Documentation and plans for the gradual transformation of the system from centralized to DAO.](/docs/README.md)
+
 ## Start the server
 
 ```shell
@@ -34,4 +36,11 @@ npx pm2 start npm --name "Warpcast Traffic" -- run start
 
 # OR start the server manually
 npm run start
+```
+
+## Development
+
+```shell
+# create new migration
+npx knex migrate:make my_new_migration
 ```
