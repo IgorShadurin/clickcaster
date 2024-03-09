@@ -134,7 +134,7 @@ function App() {
           </div>
           <div className="row">
             <div className="col-auto">
-              <p className="text-sm text-muted">&copy; Copyright 2023 ClickCaster</p>
+              <p className="text-sm text-muted">&copy; Copyright 2024 ClickCaster</p>
             </div>
           </div>
         </div>
