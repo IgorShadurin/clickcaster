@@ -12,7 +12,7 @@ app.use(cors())
 
 // Routes
 app.use('/v1', v1Api)
-app.use('/static', express.static(path.join( 'static')));
+app.use('/static', express.static(path.join('static')))
 
 // Error handler should be the last middleware
 app.use(errorHandler)

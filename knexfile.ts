@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { Knex } from 'knex'
 
-const knexConfig: Knex.Config = {
+export const knexConfig: Knex.Config = {
   client: 'mysql2',
   connection: {
     host: process.env.DB_HOST,

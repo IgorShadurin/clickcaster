@@ -21,7 +21,6 @@ async function processClick(frameData: string): Promise<{
   const client = new NeynarAPIClient(neynarApiKey)
   const result = await client.validateFrameAction(frameData)
 
-  // todo verify the target url
   // https://THE_SITE/v1/app/email
   // console.log('result.action.url', (result.action as any).url)
   if (!result.valid) {

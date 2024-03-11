@@ -15,5 +15,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex('users').where('fid', 354669).delete()
+  await knex('warpcast_user').where('fid', 354669).delete()
 }
