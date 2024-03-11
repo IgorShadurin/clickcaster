@@ -4,13 +4,19 @@ import { IRegisterResponse } from './interface/IRegisterResponse'
 import { IRegisterRequest } from './interface/IRegisterRequest'
 import { getSignedClickInfo, validateFrameId } from '../../../utils/click'
 
+/**
+ * Registers potential clicks from Frame 1 to Frame 2
+ * @param req Request
+ * @param res Response
+ * @param next NextFunction
+ */
 export default async (
   req: Request<IRegisterRequest>,
   res: Response<IRegisterResponse>,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { toFrameId, clickData, signature } = req.body as IRegisterRequest
+    const { toFrameId, clickData, signature } = req.body
 
     await validateFrameId(toFrameId)
     const { frameId, fid } = await getSignedClickInfo(clickData, signature)
