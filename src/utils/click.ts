@@ -1,4 +1,4 @@
-import { extractLogProvider } from './crypto'
+import { extractLogProvider, validateSignatureLength } from './crypto'
 import { getKeyOwnerId } from '../db/AccessKeyModel'
 import { frameExists, getFrameDataByUrl } from '../db/FrameModel'
 import { getExpectedClick, getUniqueClick, removeExpectedClick, setUniqueClick } from './memcached/clicks'
@@ -6,6 +6,11 @@ import { getDate } from './date'
 import { incrementVisitors } from '../db/FrameVisitorsModel'
 import { upsertContribution } from '../db/ContributionModel'
 import { extractClickData } from './extract-click'
+
+/**
+ * Maximum length of click data
+ */
+export const MAX_CLICK_DATA_LENGTH = 10000
 
 /**
  * Information extracted from clickData and signature
@@ -27,7 +32,8 @@ export interface SignedClickInfo {
  * @param signature Signature of the click's provider
  */
 export async function getSignedClickInfo(clickData: string, signature: string): Promise<SignedClickInfo> {
-  // todo check that input data is not empty and correct size
+  validateMaxClickDataLength(clickData)
+  validateSignatureLength(signature)
   const logProviderAddress = extractLogProvider(clickData, signature)
   const logOwnerId = await getKeyOwnerId(logProviderAddress)
 
@@ -90,5 +96,15 @@ export async function validateFrameId(frameId: number): Promise<void> {
 
   if (!(await frameExists(BigInt(frameId)))) {
     throw new Error('Frame not found in the database')
+  }
+}
+
+/**
+ * Validate clickData length
+ * @param clickData Click data
+ */
+export function validateMaxClickDataLength(clickData: string): void {
+  if (clickData.length > MAX_CLICK_DATA_LENGTH) {
+    throw new Error(`Click data is too long. Max length is ${MAX_CLICK_DATA_LENGTH} characters`)
   }
 }
