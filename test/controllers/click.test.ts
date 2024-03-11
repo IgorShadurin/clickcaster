@@ -59,6 +59,7 @@ describe('Click', () => {
     mockExtractClickData({
       appUrl: frames.frameData1.url,
       fid: clickers.clicker1.fid,
+      timestamp: new Date(),
     })
     const supertestApp = supertest(app)
     const data = (await supertestApp.post(`/v1/click/register`).send(clicks.register.requestFrom1)).body
@@ -91,6 +92,7 @@ describe('Click', () => {
     mockExtractClickData({
       appUrl: frames.frameData1.url,
       fid: clickers.clicker1.fid,
+      timestamp: new Date(),
     })
     const data1 = (await supertestApp.post(`/v1/click/register`).send(clicks.register.requestFrom1)).body
     expect(data1).toEqual({ status: 'ok' })
@@ -98,6 +100,7 @@ describe('Click', () => {
     mockExtractClickData({
       appUrl: frames.frameData2.url,
       fid: clickers.clicker1.fid,
+      timestamp: new Date(),
     })
     const data2 = (await supertestApp.post(`/v1/click/log`).send(clicks.log.requestFrom2)).body
     expect(data2).toEqual({ status: 'ok' })
@@ -109,12 +112,14 @@ describe('Click', () => {
       mockExtractClickData({
         appUrl: frames.frameData1.url,
         fid: clickers.clicker1.fid,
+        timestamp: new Date(),
       })
       expect((await supertestApp.post(`/v1/click/register`).send(clicks.register.requestFrom1)).status).toBe(200)
 
       mockExtractClickData({
         appUrl: frames.frameData2.url,
         fid: clickers.clicker1.fid,
+        timestamp: new Date(),
       })
       expect((await supertestApp.post(`/v1/click/log`).send(clicks.log.requestFrom2)).status).toBe(200)
     }

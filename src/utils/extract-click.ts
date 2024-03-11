@@ -15,6 +15,10 @@ export interface ClickData {
    */
   fid: bigint
   /**
+   * Timestamp
+   */
+  timestamp: Date
+  /**
    * Decoded click data
    */
   decodedClick?: ValidateFrameActionResponse
@@ -44,9 +48,16 @@ export async function extractClickData(data: string): Promise<ClickData> {
     throw new Error('Cannot extract fid from decoded click data')
   }
 
+  const timestamp = decodedClick.action?.timestamp
+
+  if (!timestamp) {
+    throw new Error('Cannot extract timestamp from decoded click data')
+  }
+
   return {
     appUrl,
     fid: BigInt(fid),
+    timestamp: new Date(timestamp),
     decodedClick,
   }
 }

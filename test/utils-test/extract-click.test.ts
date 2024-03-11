@@ -12,5 +12,6 @@ describe('Extract Click', () => {
     expect(data.appUrl).toBeDefined()
     expect(data.fid).toBeDefined()
     expect(data.decodedClick).toBeDefined()
+    expect(data.timestamp).toBeDefined()
   })
 })
