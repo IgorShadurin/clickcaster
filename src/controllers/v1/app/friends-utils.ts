@@ -11,7 +11,7 @@ export async function insertVisit(pageOwnerId: number, data: ValidateFrameAction
   const { fid, username, pfp_url: profile_image, display_name } = data.action!.interactor
 
   await upsertUser({
-    fid,
+    fid: BigInt(fid),
     username,
     display_name,
     profile_image,

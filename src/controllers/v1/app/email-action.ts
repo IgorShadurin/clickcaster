@@ -90,7 +90,7 @@ export default async (req: Request, res: Response<string>, next: NextFunction): 
         await subscribeEmail(email, display_name, profile_image, fid)
 
         await upsertUser({
-          fid,
+          fid: BigInt(fid),
           username,
           display_name,
           profile_image,

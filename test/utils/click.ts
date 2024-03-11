@@ -47,21 +47,21 @@ export interface PreparedTestData {
  */
 export async function prepareTestData(): Promise<PreparedTestData> {
   const owner1 = {
-    fid: 111111,
+    fid: BigInt(111111),
     username: 'owner1',
     display_name: 'Owner 1',
     profile_image: 'no',
     data: '',
   }
   const owner2 = {
-    fid: 222222,
+    fid: BigInt(222222),
     username: 'owner2',
     display_name: 'Owner 2',
     profile_image: 'no',
     data: '',
   }
   const clicker1 = {
-    fid: 1234567890,
+    fid: BigInt(1234567890),
     username: 'clicker1',
     display_name: 'Clicker 1',
     profile_image: 'no',

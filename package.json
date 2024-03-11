@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepublishOnly": "rimraf dist && npm run compile:types && npm run compile:node --env mode=production",
     "start:dev": "nodemon",
     "build": "rimraf ./build && tsc",
     "start": "ts-node src/index.ts",
     "test": "jest --runInBand",
     "lint:check": "eslint \"src/**/*.ts\" \"test/**/*.ts\" && prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
-    "check:types": "tsc --project tsconfig.test.json"
+    "check:types": "tsc --project tsconfig.test.json",
+    "check-all": "npm run lint:check && npm run check:types && npm run test"
   },
   "author": "Igor Shadurin",
   "license": "MIT",

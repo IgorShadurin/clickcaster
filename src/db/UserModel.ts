@@ -3,8 +3,7 @@ import { db } from './index'
 export const TABLE_NAME = 'warpcast_user'
 
 export interface IUser {
-  // todo upgrade fid to bigint
-  fid: number
+  fid: bigint
   username: string
   display_name: string
   profile_image: string
