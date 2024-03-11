@@ -5,7 +5,6 @@ export interface IRegisterRequest {
   /**
    * Expected click on target Frame ID from Frame provider
    */
-  // todo try to convert to bigint?
   toFrameId: number
   /**
    * Signature of clickData provider
