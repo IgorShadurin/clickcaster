@@ -41,8 +41,7 @@ export async function getSignedClickInfo(clickData: string, signature: string): 
     throw new Error(`Signature key is not found in the database or inactive: ${logProviderAddress}`)
   }
 
-  // todo extract data using Neynar instead of 'JSON.parse'?
-  const { appUrl, fid } = extractClickData(JSON.parse(clickData))
+  const { appUrl, fid } = await extractClickData(clickData)
   const frameByUrlInfo = await getFrameDataByUrl(appUrl)
 
   if (!frameByUrlInfo) {
