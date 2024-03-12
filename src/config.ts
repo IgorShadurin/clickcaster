@@ -23,6 +23,11 @@ export interface IConfigData {
    * Klaviyo list ID
    */
   klaviyoListId: string
+
+  /**
+   * App domain
+   */
+  appDomain: string
 }
 
 /**
@@ -33,6 +38,7 @@ let configData: IConfigData = {
   publicUrl: '',
   klaviyoApiKey: '',
   klaviyoListId: '',
+  appDomain: '',
 }
 
 /**
@@ -55,10 +61,15 @@ export function loadConfig(): void {
     throw new Error('KLAVIYO_LIST_ID env variable not set')
   }
 
+  if (!process.env.THE_APP_DOMAIN) {
+    throw new Error('THE_APP_DOMAIN env variable not set')
+  }
+
   configData.neynarApiKey = process.env.NEYNAR_API_KEY
   configData.publicUrl = process.env.PUBLIC_URL
   configData.klaviyoApiKey = process.env.KLAVIYO_API_KEY
   configData.klaviyoListId = process.env.KLAVIYO_LIST_ID
+  configData.appDomain = process.env.THE_APP_DOMAIN
 }
 
 /**
