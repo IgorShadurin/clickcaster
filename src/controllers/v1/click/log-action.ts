@@ -10,8 +10,8 @@ export default async (
 ): Promise<void> => {
   try {
     const { clickData, signature } = req.body
-    const { frameId, fid } = await getSignedClickInfo(clickData, signature)
-    await registerClick(frameId, fid)
+    const { frameId, fid, isoTime } = await getSignedClickInfo(clickData, signature)
+    await registerClick(frameId, fid, isoTime)
 
     res.json({ status: 'ok' })
   } catch (e) {

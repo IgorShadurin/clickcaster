@@ -7,7 +7,7 @@ import { ApiKeySession, ListEnum, ProfileBulkImportJobEnum, ProfileEnum, Profile
 import validator from 'email-validator'
 import { upsertUser } from '../../../db/UserModel'
 import { ValidateFrameActionResponse } from '@neynar/nodejs-sdk/build/neynar-api/v2/openapi-farcaster'
-import { currentYMDHIS } from '../../../db/utils'
+import { log } from '../../../utils/other'
 
 async function processClick(frameData: string): Promise<{
   fid: number
@@ -22,7 +22,6 @@ async function processClick(frameData: string): Promise<{
   const result = await client.validateFrameAction(frameData)
 
   // https://THE_SITE/v1/app/email
-  // console.log('result.action.url', (result.action as any).url)
   if (!result.valid) {
     throw new Error('Invalid frame data')
   }
@@ -98,10 +97,10 @@ export default async (req: Request, res: Response<string>, next: NextFunction): 
         })
 
         resultPage = endPage()
-        console.log(`[${currentYMDHIS()}] Email subscribed! ${fid} ${email}`)
+        log(`Email subscribed! ${fid} ${email}`)
       }
     } catch (e) {
-      console.log(`Email processing error: ${(e as Error).message}`)
+      log(`Email processing error: ${(e as Error).message}`)
     }
 
     res.send(resultPage)

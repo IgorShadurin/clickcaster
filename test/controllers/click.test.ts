@@ -5,11 +5,11 @@ import knex from 'knex'
 import configurations from '../../knexfile'
 import { db } from '../../src/db'
 import { getVisitorsCount } from '../../src/db/FrameVisitorsModel'
-import { getDate } from '../../src/utils/date'
 import { prepareTestData } from '../utils/click'
 import { getBalance } from '../../src/db/ContributionModel'
 import { ClickData, extractClickData } from '../../src/utils/extract-click'
 import { IRegisterRequest } from '../../src/controllers/v1/click/interface/IRegisterRequest'
+import { getISODate } from '../../src/utils/time'
 
 const testDb = knex(configurations.development)
 
@@ -87,7 +87,7 @@ describe('Click', () => {
     const supertestApp = supertest(app)
 
     const { frames, clicks, clickers } = await prepareTestData()
-    expect(await getVisitorsCount(frames.frameId1, getDate())).toEqual({ all_visitors: 0n, unique_visitors: 0n })
+    expect(await getVisitorsCount(frames.frameId1, getISODate())).toEqual({ all_visitors: 0n, unique_visitors: 0n })
 
     mockExtractClickData({
       appUrl: frames.frameData1.url,
@@ -105,7 +105,7 @@ describe('Click', () => {
     const data2 = (await supertestApp.post(`/v1/click/log`).send(clicks.log.requestFrom2)).body
     expect(data2).toEqual({ status: 'ok' })
 
-    expect(await getVisitorsCount(frames.frameId2, getDate())).toEqual({ all_visitors: 1n, unique_visitors: 1n })
+    expect(await getVisitorsCount(frames.frameId2, getISODate())).toEqual({ all_visitors: 1n, unique_visitors: 1n })
     expect(await getBalance(frames.frameId1)).toEqual(1n)
 
     for (let i = 0; i < 9; i++) {
@@ -124,7 +124,7 @@ describe('Click', () => {
       expect((await supertestApp.post(`/v1/click/log`).send(clicks.log.requestFrom2)).status).toBe(200)
     }
 
-    expect(await getVisitorsCount(frames.frameId2, getDate())).toEqual({ all_visitors: 10n, unique_visitors: 1n })
+    expect(await getVisitorsCount(frames.frameId2, getISODate())).toEqual({ all_visitors: 10n, unique_visitors: 1n })
     // balance of contributor should not be increased as 1 user visit is unique for 1 day
     expect(await getBalance(frames.frameId1)).toEqual(1n)
   })

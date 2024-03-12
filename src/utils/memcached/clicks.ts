@@ -7,9 +7,14 @@ const EXPECTED_CLICK_TO = 'expected_click_to'
 const UNIQUE_CLICK = 'unique_click'
 
 /**
+ * Click allowed time in minutes
+ */
+export const CLICK_ALLOWED_TIME_MINUTES = 5
+
+/**
  * Expected click expiration time in seconds
  */
-const EXPECTED_CLICK_EXPIRATION_SECONDS = 60 * 5 // 5 minutes
+const EXPECTED_CLICK_EXPIRATION_SECONDS = 60 * CLICK_ALLOWED_TIME_MINUTES // 5 minutes
 
 /**
  * Unique click expiration time in seconds

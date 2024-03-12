@@ -1,11 +1,17 @@
 import { extractLogProvider, validateSignatureLength } from './crypto'
 import { getKeyOwnerId } from '../db/AccessKeyModel'
 import { frameExists, getFrameDataByUrl } from '../db/FrameModel'
-import { getExpectedClick, getUniqueClick, removeExpectedClick, setUniqueClick } from './memcached/clicks'
-import { getDate } from './date'
+import {
+  CLICK_ALLOWED_TIME_MINUTES,
+  getExpectedClick,
+  getUniqueClick,
+  removeExpectedClick,
+  setUniqueClick,
+} from './memcached/clicks'
 import { incrementVisitors } from '../db/FrameVisitorsModel'
 import { upsertContribution } from '../db/ContributionModel'
 import { extractClickData } from './extract-click'
+import { getISODate, isWithinMaxMinutes } from './time'
 
 /**
  * Maximum length of click data
@@ -24,6 +30,10 @@ export interface SignedClickInfo {
    * Clicker ID
    */
   fid: bigint
+  /**
+   * ISO time of the click
+   */
+  isoTime: string
 }
 
 /**
@@ -41,7 +51,7 @@ export async function getSignedClickInfo(clickData: string, signature: string): 
     throw new Error(`Signature key is not found in the database or inactive: ${logProviderAddress}`)
   }
 
-  const { appUrl, fid } = await extractClickData(clickData)
+  const { appUrl, fid, timestamp } = await extractClickData(clickData)
   const frameByUrlInfo = await getFrameDataByUrl(appUrl)
 
   if (!frameByUrlInfo) {
@@ -55,6 +65,7 @@ export async function getSignedClickInfo(clickData: string, signature: string): 
   return {
     frameId: frameByUrlInfo.id,
     fid,
+    isoTime: timestamp.toISOString(),
   }
 }
 
@@ -62,23 +73,27 @@ export async function getSignedClickInfo(clickData: string, signature: string): 
  * Register a click for analytics and traffic exchange
  * @param frameId Target Frame ID
  * @param fid Clicker ID
+ * @param isoTime ISO time of the click
  */
-export async function registerClick(frameId: bigint, fid: bigint): Promise<void> {
-  const previouslyClickedToday = await getUniqueClick(frameId, getDate(), fid)
+export async function registerClick(frameId: bigint, fid: bigint, isoTime: string): Promise<void> {
+  const date = getISODate()
+  const previouslyClickedToday = await getUniqueClick(frameId, date, fid)
 
   if (!previouslyClickedToday) {
-    await setUniqueClick(frameId, getDate(), fid)
+    await setUniqueClick(frameId, date, fid)
   }
-  // todo get click info and verify that it's correct, for correct time span
 
   // increment visitors for analytics
-  await incrementVisitors(frameId, 1, previouslyClickedToday ? 0 : 1, getDate())
+  await incrementVisitors(frameId, 1, previouslyClickedToday ? 0 : 1, date)
   const clickSourceAppId = await getExpectedClick(frameId, fid)
 
   // increment contribution only 1 time per day per user for traffic exchange
   if (clickSourceAppId && !previouslyClickedToday) {
-    // increment contribution to the source app that registered the click
-    await upsertContribution(clickSourceAppId, BigInt(1))
+    if (isWithinMaxMinutes(isoTime, CLICK_ALLOWED_TIME_MINUTES)) {
+      // increment contribution to the source app that registered the click
+      await upsertContribution(clickSourceAppId, BigInt(1))
+    }
+
     // remove registration of the click that source app made
     await removeExpectedClick(frameId, fid)
   }
