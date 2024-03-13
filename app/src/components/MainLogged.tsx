@@ -31,7 +31,7 @@ export function MainLogged() {
           </button>
 
           <div className="mt-8">
-            <FramesList />
+            <FramesList frames={[]} />
           </div>
         </div>
       </div>

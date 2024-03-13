@@ -11,6 +11,10 @@ export interface AuthData {
    * Farcaster auth nonce
    */
   nonce: string
+  /**
+   * Farcaster username
+   */
+  username: string
 }
 
 export interface IListResponse {

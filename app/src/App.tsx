@@ -7,17 +7,19 @@ import { MainNoAuth } from './components/MainNoAuth'
 import { MainLogged } from './components/MainLogged'
 import { FooterNoAuth } from './components/FooterNoAuth'
 import { FooterLogged } from './components/FooterLogged'
+import { getAuthData } from './service/storage'
 
 function App() {
-  const { isAuthenticated } = useProfile()
+  const profile = useProfile()
+  const isAuth = profile.isAuthenticated || getAuthData()
 
   return (
     <div className="overflow-x-hidden rounded-top-4 pt-2 pt-lg-4">
       <Header />
 
-      {isAuthenticated ? <MainLogged /> : <MainNoAuth />}
+      {isAuth ? <MainLogged /> : <MainNoAuth />}
 
-      {isAuthenticated ? <FooterLogged /> : <FooterNoAuth />}
+      {isAuth ? <FooterLogged /> : <FooterNoAuth />}
     </div>
   )
 }
