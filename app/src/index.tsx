@@ -1,16 +1,27 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-// import 'bootstrap/dist/css/bootstrap.min.css'
 import './css/main.css'
 import './css/utility.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
+import { AuthKitProvider } from '@farcaster/auth-kit'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+// todo move config to .env
+const config = {
+  relay: "https://relay.farcaster.xyz",
+  rpcUrl: "https://mainnet.optimism.io",
+  domain: "clickcaster.xyz",
+  siweUri: "https://clickcaster.xyz",
+};
+
 root.render(
   <React.StrictMode>
+    <AuthKitProvider config={config}>
     <App />
+    </AuthKitProvider>
+
   </React.StrictMode>,
 )
 
