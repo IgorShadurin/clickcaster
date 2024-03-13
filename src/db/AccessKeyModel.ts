@@ -7,7 +7,7 @@ export const ACCESS_KEY_LENGTH = 40
 /**
  * Access key interface
  */
-interface IAccessKey {
+export interface IAccessKey {
   id?: number
   eth_address: string
   active: boolean
@@ -55,4 +55,13 @@ export async function getKeyOwnerId(key: string): Promise<bigint | undefined> {
   const result = await db(TABLE_NAME).select('user_id').where('eth_address', key).andWhere('active', true).first()
 
   return result ? BigInt(result.user_id) : undefined
+}
+
+/**
+ * List keys
+ * @param userId The user ID
+ * @param limit The limit
+ */
+export async function listKeys(userId: bigint, limit = 100): Promise<IAccessKey[]> {
+  return db(TABLE_NAME).select('*').where('user_id', Number(userId)).limit(limit).orderBy('id', 'desc')
 }

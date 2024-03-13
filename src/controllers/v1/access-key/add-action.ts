@@ -14,11 +14,6 @@ import { getConfigData } from '../../../config'
 export default async (req: Request<IAddRequest>, res: Response<IAddResponse>, next: NextFunction): Promise<void> => {
   try {
     const { key, message, signature, nonce } = req.body
-
-    if (process.env.ENV_TYPE === 'production' && nonce === 'zqFSIZNWpnfensOJk') {
-      throw new Error('Invalid "nonce". You are not allowed to use this nonce.')
-    }
-
     const { appDomain } = getConfigData()
     const { fid } = await processAuthData(message, signature as `0x${string}`, appDomain, nonce)
 

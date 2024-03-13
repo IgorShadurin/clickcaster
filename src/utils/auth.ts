@@ -13,6 +13,10 @@ export async function processAuthData(
   domain: string,
   nonce: string,
 ): Promise<VerifySignInMessageResponse> {
+  if (process.env.ENV_TYPE === 'production' && nonce === 'zqFSIZNWpnfensOJk') {
+    throw new Error('Invalid "nonce". You are not allowed to use this nonce.')
+  }
+
   if (!message) {
     throw new Error('Invalid "message"')
   }
