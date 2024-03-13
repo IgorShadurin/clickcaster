@@ -1,21 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { KeysManagementModal } from './KeysManagementModal'
-import { accessKeyAdd } from '../service/api'
+import { accessKeyAdd, frameAdd, frameList, IFrame, IFrameCreation } from '../service/api'
 import { getAuthData } from '../service/storage'
 import { FramesList } from './FramesList'
+import { FramesManagementModal } from './FramesManagementModal'
 
 export function MainLogged() {
   const [showKeysModal, setShowKeysModal] = React.useState(false)
+  const [showFramesModal, setShowFramesModal] = React.useState(false)
+  const [frames, setFrames] = React.useState<IFrame[]>([])
+
+  async function updateFrames() {
+    setFrames((await frameList(getAuthData()!)).list)
+  }
+
+  useEffect(() => {
+    updateFrames().then()
+  }, [])
 
   return (
     <main>
       <div className="pt-56 pb-10 pt-lg-56 pb-lg-0 mt-n40 mx-lg-auto w-lg-75">
         <div className="container">
           <button
-            disabled={true}
             className="btn btn-primary btn-xs"
             onClick={() => {
-              // todo show AddFrameModal
+              setShowFramesModal(true)
             }}
           >
             <i className="bi bi-plus"></i> Add Frame
@@ -31,7 +41,7 @@ export function MainLogged() {
           </button>
 
           <div className="mt-8">
-            <FramesList frames={[]} />
+            <FramesList frames={frames} />
           </div>
         </div>
       </div>
@@ -49,6 +59,23 @@ export function MainLogged() {
           }
 
           await accessKeyAdd(keyId, authData)
+        }}
+      />
+
+      <FramesManagementModal
+        show={showFramesModal}
+        handleClose={() => {
+          setShowFramesModal(false)
+        }}
+        onSave={async (data: IFrameCreation) => {
+          const authData = getAuthData()
+          if (!authData) {
+            alert('No auth data found')
+            return
+          }
+
+          await frameAdd(data, authData)
+          await updateFrames()
         }}
       />
     </main>

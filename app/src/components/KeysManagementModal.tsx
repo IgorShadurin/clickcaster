@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, InputGroup, Modal, Form } from 'react-bootstrap'
 import { HDNodeWallet } from 'ethers'
-import { accessKeyList, IListResponse, IPreparedList } from '../service/api'
+import { accessKeyList, IKey } from '../service/api'
 import { getAuthData } from '../service/storage'
 
 export function KeysManagementModal({
@@ -14,7 +14,7 @@ export function KeysManagementModal({
   onSave: (keyId: string) => Promise<void>
 }) {
   const [newKey, setNewKey] = React.useState<HDNodeWallet>()
-  const [list, setList] = React.useState<IPreparedList[]>([])
+  const [list, setList] = React.useState<IKey[]>([])
 
   return (
     <Modal

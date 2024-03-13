@@ -17,16 +17,26 @@ export interface AuthData {
   username: string
 }
 
-export interface IListResponse {
+export interface IListResponse<T> {
   status: string
-  list: IPreparedList[]
+  list: T[]
 }
 
-export interface IPreparedList {
+export interface IKey {
   eth_address: string
   active: boolean
   created_at: string
 }
+
+export interface IFrame {
+  id: number
+  title: string
+  description: string
+  url: string
+  created_at: string
+}
+
+export type IFrameCreation = Omit<IFrame, 'created_at'>
 
 /**
  * Get URL
@@ -60,7 +70,7 @@ export async function accessKeyAdd(key: string, auth: AuthData): Promise<unknown
  * List access keys for authenticated user
  * @param auth The auth data
  */
-export async function accessKeyList(auth: AuthData): Promise<IListResponse> {
+export async function accessKeyList(auth: AuthData): Promise<IListResponse<IKey>> {
   return (
     await fetch(getUrl('v1/access-key/list'), {
       method: 'POST',
@@ -68,6 +78,39 @@ export async function accessKeyList(auth: AuthData): Promise<IListResponse> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(auth),
+    })
+  ).json()
+}
+
+/**
+ * List frames
+ * @param auth The auth data
+ */
+export async function frameList(auth: AuthData): Promise<IListResponse<IFrame>> {
+  return (
+    await fetch(getUrl('v1/frame/list'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(auth),
+    })
+  ).json()
+}
+
+/**
+ * Add a frame
+ * @param frame Frame info
+ * @param auth The auth data
+ */
+export async function frameAdd(frame: IFrameCreation, auth: AuthData): Promise<unknown> {
+  return (
+    await fetch(getUrl('v1/frame/add'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...frame, ...auth }),
     })
   ).json()
 }

@@ -1,6 +1,10 @@
 import { db } from './index'
 
 export const TABLE_NAME = 'clicks_frame'
+
+/**
+ * DB limit for indexed urls
+ */
 export const MAX_URL_LENGTH = 768
 
 export interface IFrame {
@@ -82,5 +86,36 @@ export async function frameExists(frameId: bigint): Promise<boolean> {
     .where('id', frameId.toString()) // Convert bigint to string for compatibility
     .first()
 
-  return Boolean(result) // returns true if a frame is found, false otherwise
+  return Boolean(result)
+}
+
+/**
+ * Retrieves a frame by owner ID
+ * @param userId The ID of the user to search for.
+ * @param limit The maximum number of frames to retrieve.
+ */
+export async function getFramesByUserId(userId: bigint, limit = 100): Promise<IFrame[]> {
+  const result = await db(TABLE_NAME).where('frame_owner_id', userId.toString()).orderBy('id', 'desc').limit(limit)
+
+  return result.map(frame => {
+    frame.frame_owner_id = BigInt(frame.frame_owner_id)
+
+    return frame as IFrame
+  })
+}
+
+/**
+ * Retrieves a frame by its ID
+ * @param frameId The ID of the frame to search for.
+ */
+export async function getFrameById(frameId: bigint): Promise<IFrame> {
+  const result = await db(TABLE_NAME).where('id', frameId.toString()).first()
+
+  if (result) {
+    result.frame_owner_id = BigInt(result.frame_owner_id)
+  } else {
+    throw new Error('Frame not found')
+  }
+
+  return result
 }
