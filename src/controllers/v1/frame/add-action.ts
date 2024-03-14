@@ -26,6 +26,20 @@ function validateInput(title: string, description: string, url: string): void {
 }
 
 /**
+ * Validate frame URL by checking the frame owner tag
+ * @param url URL
+ * @param fid Frame owner ID
+ */
+async function validateFrameUrl(url: string, fid: number): Promise<void> {
+  const expectedTag = `<meta property="frame:owner" content="${fid}"/>`
+  const pageText = await (await fetch(url)).text()
+
+  if (!pageText.includes(expectedTag)) {
+    throw new Error('Cannot find the frame owner tag on the page. Please add the tag to the page.')
+  }
+}
+
+/**
  * Add frame action
  * @param req Request
  * @param res Response
@@ -37,6 +51,7 @@ export default async (req: Request<IAddRequest>, res: Response<IAddResponse>, ne
     const { appDomain } = getConfigData()
     const { fid } = await processAuthData(message, signature as `0x${string}`, appDomain, nonce)
     validateInput(title, description, url)
+    await validateFrameUrl(url, fid)
 
     try {
       await insertFrame({

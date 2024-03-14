@@ -3,6 +3,7 @@ import { Button, InputGroup, Modal, Form } from 'react-bootstrap'
 import { HDNodeWallet } from 'ethers'
 import { accessKeyList, IKey } from '../service/api'
 import { getAuthData } from '../service/storage'
+import { CopyButton } from './CopyButton'
 
 export function KeysManagementModal({
   show,
@@ -15,6 +16,7 @@ export function KeysManagementModal({
 }) {
   const [newKey, setNewKey] = React.useState<HDNodeWallet>()
   const [list, setList] = React.useState<IKey[]>([])
+  const address = newKey?.address.replace('0x', '').toLowerCase() || ''
 
   return (
     <Modal
@@ -42,10 +44,10 @@ export function KeysManagementModal({
           </Button>
         </div>
 
-        {list.length === 0 && <p className="text-sm mt-3">No keys</p>}
+        {list.length === 0 && !newKey && <p className="text-sm mt-3">No keys</p>}
         {list.length > 0 && (
           <>
-            <p className="text-sm mt-3">Already created keys</p>
+            <hr/>
             {list.map((item, index) => (
               <p key={index} className="text-sm mt-3">
                 {item.eth_address}
@@ -63,8 +65,9 @@ export function KeysManagementModal({
                 aria-label="Small"
                 aria-describedby="inputGroup-sizing-sm"
                 disabled={true}
-                value={newKey.address.replace('0x', '').toLowerCase()}
+                value={address}
               />
+              <CopyButton text={address}/>
             </InputGroup>
 
             <InputGroup size="sm" className="my-3">
@@ -75,6 +78,7 @@ export function KeysManagementModal({
                 disabled={true}
                 value={newKey.privateKey}
               />
+              <CopyButton text={newKey.privateKey}/>
             </InputGroup>
           </>
         )}
@@ -85,7 +89,7 @@ export function KeysManagementModal({
           size="sm"
           onClick={async () => {
             if (newKey) {
-              onSave(newKey.address.replace('0x', '').toLowerCase())
+              onSave(address)
             }
 
             handleClose()

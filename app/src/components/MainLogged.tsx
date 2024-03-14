@@ -4,6 +4,7 @@ import { accessKeyAdd, frameAdd, frameList, IFrame, IFrameCreation } from '../se
 import { getAuthData } from '../service/storage'
 import { FramesList } from './FramesList'
 import { FramesManagementModal } from './FramesManagementModal'
+import { extractFidFromMessage } from '../utils/farcaster'
 
 export function MainLogged() {
   const [showKeysModal, setShowKeysModal] = React.useState(false)
@@ -63,6 +64,7 @@ export function MainLogged() {
       />
 
       <FramesManagementModal
+        fid={extractFidFromMessage(getAuthData()!.message)}
         show={showFramesModal}
         handleClose={() => {
           setShowFramesModal(false)
@@ -74,8 +76,15 @@ export function MainLogged() {
             return
           }
 
-          await frameAdd(data, authData)
+          const insertInfo = await frameAdd(data, authData)
           await updateFrames()
+          // @ts-ignore
+          if (insertInfo.status !== 'ok') {
+            // @ts-ignore
+            return insertInfo.message
+          }else {
+            return ''
+          }
         }}
       />
     </main>

@@ -14,7 +14,6 @@ export function FramesList({frames}: {frames: IFrame[]}) {
               <th>#</th>
               <th>Title</th>
               <th>Description</th>
-              <th>URL</th>
               <th>Statistics</th>
             </tr>
           </thead>
@@ -23,8 +22,10 @@ export function FramesList({frames}: {frames: IFrame[]}) {
               <tr key={index}>
                 <td>{item.id}</td>
                 <td>{item.title}</td>
-                <td>{item.description}</td>
-                <td>{item.url}</td>
+                <td>
+                  <p>{item.description}</p>
+                  <p>{item.url}</p>
+                </td>
                 <td>
                   {/*<button className="btn btn-outline-primary btn-xs">*/}
                   {/*  <i className="bi bi-bar-chart"></i> Analytics*/}
