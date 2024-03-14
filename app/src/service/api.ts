@@ -42,6 +42,17 @@ export interface IFrame {
 
 export type IFrameCreation = Omit<IFrame, 'created_at'>
 
+export interface IStata {
+  users: number
+  frames: number
+  all_clicks: number
+}
+
+export interface IStataResponse {
+  status: string
+  stata: IStata
+}
+
 /**
  * Get URL
  * @param path The path
@@ -131,6 +142,17 @@ export async function userUpsert(auth: AuthData): Promise<unknown> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(auth),
+    })
+  ).json()
+}
+
+/**
+ * Get app stat
+ */
+export async function appStata(): Promise<IStataResponse> {
+  return (
+    await fetch(getUrl('v1/app/stata'), {
+      method: 'GET',
     })
   ).json()
 }

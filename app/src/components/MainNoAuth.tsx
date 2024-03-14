@@ -1,11 +1,10 @@
 import { SignInButton } from '@farcaster/auth-kit'
 import React from 'react'
 
-export function MainNoAuth(){
+export function MainNoAuth() {
   return (
     <main>
-      <div
-        className="pt-56 pb-10 pt-lg-56 pb-lg-0 mt-n40 position-relative gradient-bottom-right start-indigo middle-purple end-yellow">
+      <div className="pt-56 pb-10 pt-lg-56 pb-lg-0 mt-n40 position-relative gradient-bottom-right start-indigo middle-purple end-yellow">
         <div className="container">
           <div className="row align-items-center g-10">
             <div className="col-lg-8">
