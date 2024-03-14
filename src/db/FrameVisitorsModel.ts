@@ -110,3 +110,25 @@ export async function getVisitorsStatsByFrames(frameIds: bigint[]): Promise<IFra
 
   return result
 }
+
+/**
+ * Retrieves the total count of all visitors and unique visitors across all frames and dates.
+ */
+export async function getTotalVisitorsAndUniqueVisitors(): Promise<{
+  totalAllVisitors: bigint
+  totalUniqueVisitors: bigint
+}> {
+  const results = await db(TABLE_NAME).select(
+    db.raw('SUM(all_visitors) as totalAllVisitors, SUM(unique_visitors) as totalUniqueVisitors'),
+  )
+
+  if (results.length > 0 && results[0].totalAllVisitors !== null && results[0].totalUniqueVisitors !== null) {
+    return {
+      totalAllVisitors: BigInt(results[0].totalAllVisitors),
+      totalUniqueVisitors: BigInt(results[0].totalUniqueVisitors),
+    }
+  } else {
+    // Return zeros if no data found or in case of an unexpected null value
+    return { totalAllVisitors: BigInt(0), totalUniqueVisitors: BigInt(0) }
+  }
+}

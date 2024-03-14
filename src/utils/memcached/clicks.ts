@@ -5,16 +5,19 @@ export const memcached = new Memcached(process.env.MEMCACHED_URL || 'localhost:1
 const NAMESPACE = 'clicks_ns'
 const EXPECTED_CLICK_TO = 'expected_click_to'
 const UNIQUE_CLICK = 'unique_click'
+const STATA = 'stata'
 
 /**
  * Click allowed time in minutes
  */
 export const CLICK_ALLOWED_TIME_MINUTES = 5
+export const STATE_TIME_MINUTES = 5
 
 /**
  * Expected click expiration time in seconds
  */
 const EXPECTED_CLICK_EXPIRATION_SECONDS = 60 * CLICK_ALLOWED_TIME_MINUTES // 5 minutes
+const STATA_EXPIRATION_SECONDS = 60 * STATE_TIME_MINUTES // 5 minutes
 
 /**
  * Unique click expiration time in seconds
@@ -101,4 +104,19 @@ export async function setUniqueClick(appId: bigint, date: string, userId: bigint
  */
 export async function getUniqueClick(appId: bigint, date: string, userId: bigint): Promise<boolean> {
   return (await memcachedGet(getKey(UNIQUE_CLICK, appId.toString(), date, userId.toString()))) !== undefined
+}
+
+/**
+ * Set stata
+ * @param data Data with stata
+ */
+export async function setStata(data: string): Promise<void> {
+  await memcachedSet(getKey(STATA), data, STATA_EXPIRATION_SECONDS)
+}
+
+/**
+ * Get stata
+ */
+export async function getStata(): Promise<string | undefined> {
+  return memcachedGet(getKey(STATA))
 }
