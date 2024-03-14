@@ -118,3 +118,19 @@ export async function frameAdd(frame: IFrameCreation, auth: AuthData): Promise<u
     })
   ).json()
 }
+
+/**
+ * Insert or update user
+ * @param auth The auth data
+ */
+export async function userUpsert(auth: AuthData): Promise<unknown> {
+  return (
+    await fetch(getUrl('v1/user/upsert'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(auth),
+    })
+  ).json()
+}

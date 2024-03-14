@@ -1,7 +1,7 @@
 import { SignInButton, StatusAPIResponse, useProfile } from '@farcaster/auth-kit'
 import React, { useEffect, useState } from 'react'
 import { getAuthData, saveAuthData } from '../service/storage'
-import { AuthData } from '../service/api'
+import { AuthData, userUpsert } from '../service/api'
 
 export function Header() {
   const profile = useProfile()
@@ -42,6 +42,12 @@ export function Header() {
                         }
 
                         saveAuthData({
+                          message,
+                          signature,
+                          nonce,
+                          username,
+                        })
+                        userUpsert({
                           message,
                           signature,
                           nonce,

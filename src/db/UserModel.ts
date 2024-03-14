@@ -10,6 +10,7 @@ export interface IUser {
   data: string
   created_at: string
   updated_at: string
+  is_clickcaster?: boolean
 }
 
 /**
@@ -47,4 +48,32 @@ export async function getTotalUsersCount(): Promise<number> {
   const result = await db(TABLE_NAME).count({ count: '*' }).first()
 
   return Number(result?.count) || 0
+}
+
+/**
+ * Updates the is_clickcaster status for a given user identified by fid.
+ * This operation will attempt to update directly, without a preceding check for the user's existence.
+ * @param fid The unique identifier for the user.
+ * @param isClickcaster The new is_clickcaster value to be updated.
+ */
+export async function updateUserIsClickcaster(fid: number, isClickcaster: boolean): Promise<void> {
+  await db(TABLE_NAME).where('fid', fid).update({
+    is_clickcaster: isClickcaster,
+    updated_at: db.fn.now(), // Update the updated_at field to the current time
+  })
+}
+
+/**
+ * Retrieves a user by their fid.
+ * @param fid The unique identifier for the user.
+ * @returns The user data if found, or null if not found.
+ */
+export async function getUserByFid(fid: number): Promise<IUser> {
+  const result = await db(TABLE_NAME).where('fid', fid).first()
+
+  if (!result) {
+    throw new Error(`User with fid ${fid} not found`)
+  }
+
+  return result as IUser
 }
