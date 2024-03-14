@@ -34,6 +34,10 @@ export interface IFrame {
   description: string
   url: string
   created_at: string
+  statistics: {
+    total_actions: number
+    unique_users: number
+  }
 }
 
 export type IFrameCreation = Omit<IFrame, 'created_at'>

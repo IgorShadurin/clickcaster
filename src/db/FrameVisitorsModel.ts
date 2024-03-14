@@ -9,6 +9,10 @@ export interface IClicksFrameVisitor {
   frame_id: bigint
 }
 
+export interface IFramesStatistics {
+  [key: string]: { totalAllVisitors: bigint; totalUniqueVisitors: bigint }
+}
+
 /**
  * Increment `all_visitors` and `unique_visitors` for a given frame and date. If no entry exists for the date, inserts a new row.
  * @param frameId The ID of the frame to update or insert.
@@ -59,7 +63,7 @@ export async function incrementVisitors(
 export async function getVisitorsCount(
   frameId: bigint,
   stataDate: string,
-): Promise<{ all_visitors: bigint; unique_visitors: bigint }> {
+): Promise<Omit<IClicksFrameVisitor, 'stata_date' | 'frame_id'>> {
   const result = await db(TABLE_NAME)
     .select('all_visitors', 'unique_visitors')
     .where({
@@ -73,4 +77,36 @@ export async function getVisitorsCount(
   } else {
     return { all_visitors: BigInt(0), unique_visitors: BigInt(0) }
   }
+}
+
+/**
+ * Retrieves visitor statistics for a list of frame IDs.
+ * @param frameIds The list of frame IDs to query.
+ */
+export async function getVisitorsStatsByFrames(frameIds: bigint[]): Promise<IFramesStatistics> {
+  const stats = await db(TABLE_NAME)
+    .whereIn(
+      'frame_id',
+      frameIds.map(id => id.toString()),
+    )
+    .groupBy('frame_id')
+    .select('frame_id')
+    .select(db.raw('SUM(all_visitors) as totalAllVisitors, SUM(unique_visitors) as totalUniqueVisitors'))
+
+  // Initialize the result object with all frame IDs set to zero statistics
+  const result: IFramesStatistics = frameIds.reduce<IFramesStatistics>((acc, frameId) => {
+    acc[frameId.toString()] = { totalAllVisitors: BigInt(0), totalUniqueVisitors: BigInt(0) }
+
+    return acc
+  }, {})
+
+  // Populate the result object with actual statistics from the query
+  stats.forEach(stat => {
+    result[stat.frame_id.toString()] = {
+      totalAllVisitors: BigInt(stat.totalAllVisitors),
+      totalUniqueVisitors: BigInt(stat.totalUniqueVisitors),
+    }
+  })
+
+  return result
 }

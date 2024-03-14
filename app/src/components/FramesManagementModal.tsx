@@ -16,6 +16,10 @@ export function FramesManagementModal({
     title: '',
     description: '',
     url: '',
+    statistics: {
+      total_actions: 0,
+      unique_users: 0,
+    },
   }
   const [newFrame, setNewFrame] = React.useState<IFrameCreation>(defaultFrame)
 
