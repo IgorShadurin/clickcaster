@@ -1,5 +1,5 @@
 {
-  "include": ["src", "test", "jest.config.js", "knexfile.ts", "migrations"],
+  "include": ["src", "test", "jest.config.js", "knexfile.ts", "migrations", "playground"],
   "compilerOptions": {
     "lib": [
       "dom"

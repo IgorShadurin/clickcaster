@@ -20,6 +20,14 @@ jest.mock('../../src/utils/auth', () => {
     }),
   }
 })
+jest.mock('../../src/utils/frame', () => {
+  const originalModule = jest.requireActual('../../src/utils/frame')
+
+  return {
+    ...originalModule,
+    validateFrameUrl: jest.fn().mockResolvedValue(void 0),
+  }
+})
 
 const processAuthDataMock = processAuthData as jest.Mock
 
@@ -64,7 +72,7 @@ describe('Frame', () => {
     const requestData: IAddRequest = {
       title: 'title',
       description: 'description',
-      url: 'url',
+      url: 'https://example.com/2',
       message: '',
       signature: '',
       nonce: '',
@@ -98,7 +106,7 @@ describe('Frame', () => {
     const requestData: IAddRequest = {
       title: 'title',
       description: 'description',
-      url: 'url',
+      url: 'https://exmaple.com/1',
       message: '',
       signature: '',
       nonce: '',

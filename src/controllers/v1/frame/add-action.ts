@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { IAddResponse } from './interface/IAddResponse'
 import { IAddRequest } from './interface/IAddRequest'
 import { processAuthData } from '../../../utils/auth'
+import { validateFrameUrl } from '../../../utils/frame'
 import { getConfigData } from '../../../config'
 import { insertFrame } from '../../../db/FrameModel'
 
@@ -22,20 +23,6 @@ function validateInput(title: string, description: string, url: string): void {
 
   if (!url) {
     throw new Error('Invalid "url"')
-  }
-}
-
-/**
- * Validate frame URL by checking the frame owner tag
- * @param url URL
- * @param fid Frame owner ID
- */
-async function validateFrameUrl(url: string, fid: number): Promise<void> {
-  const expectedTag = `<meta property="frame:owner" content="${fid}"/>`
-  const pageText = await (await fetch(url)).text()
-
-  if (!pageText.includes(expectedTag)) {
-    throw new Error('Cannot find the frame owner tag on the page. Please add the tag to the page.')
   }
 }
 
