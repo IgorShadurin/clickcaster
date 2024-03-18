@@ -31,7 +31,13 @@ export interface ClickData {
 export async function extractClickData(data: string): Promise<ClickData> {
   const { neynarApiKey } = getConfigData()
   const client = new NeynarAPIClient(neynarApiKey)
-  const decodedClick = await client.validateFrameAction(data, { castReactionContext: false, followContext: false })
+
+  let decodedClick
+  try {
+    decodedClick = await client.validateFrameAction(data, { castReactionContext: false, followContext: false })
+  } catch (e) {
+    throw new Error(`External provider cannot handle the click data: ${(e as Error).message}`)
+  }
 
   // url property is not documented in the library
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
