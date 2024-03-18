@@ -33,7 +33,6 @@ function App() {
     updateStata().then()
 
     const authData = getAuthData()
-    console.log('authData', authData)
     if (authData) {
       const { message, signature, nonce, username } = authData
       dispatch(
