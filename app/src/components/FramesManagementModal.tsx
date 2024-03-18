@@ -110,15 +110,15 @@ export function FramesManagementModal({
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => {
-            handleClose()
-          }}
-        >
-          Close
-        </Button>
+        {/*<Button*/}
+        {/*  variant="secondary"*/}
+        {/*  size="sm"*/}
+        {/*  onClick={() => {*/}
+        {/*    handleClose()*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  Close*/}
+        {/*</Button>*/}
         <Button
           disabled={!newFrame.title || !newFrame.description || !newFrame.url || saveDisabled}
           variant="primary"

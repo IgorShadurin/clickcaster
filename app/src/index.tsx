@@ -6,22 +6,25 @@ import './css/utility.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { AuthKitProvider } from '@farcaster/auth-kit'
+import { Provider } from 'react-redux'
+import { store } from './redux/store'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 // todo move config to .env
 const config = {
-  relay: "https://relay.farcaster.xyz",
-  rpcUrl: "https://mainnet.optimism.io",
-  domain: "clickcaster.xyz",
-  siweUri: "https://clickcaster.xyz",
-};
+  relay: 'https://relay.farcaster.xyz',
+  rpcUrl: 'https://mainnet.optimism.io',
+  domain: 'clickcaster.xyz',
+  siweUri: 'https://clickcaster.xyz',
+}
 
 root.render(
   <React.StrictMode>
     <AuthKitProvider config={config}>
-    <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </AuthKitProvider>
-
   </React.StrictMode>,
 )
 

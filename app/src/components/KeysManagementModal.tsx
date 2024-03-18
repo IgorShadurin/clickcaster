@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, InputGroup, Modal, Form } from 'react-bootstrap'
 import { HDNodeWallet } from 'ethers'
 import { accessKeyList, IKey } from '../service/api'
-import { getAuthData } from '../service/storage'
 import { CopyButton } from './CopyButton'
+import { useAppSelector } from '../redux/hooks'
+import { selectAuth } from '../redux/reducers/authSlice'
 
 export function KeysManagementModal({
   show,
@@ -14,9 +15,10 @@ export function KeysManagementModal({
   handleClose: () => void
   onSave: (keyId: string) => Promise<void>
 }) {
-  const [newKey, setNewKey] = React.useState<HDNodeWallet>()
-  const [list, setList] = React.useState<IKey[]>([])
+  const [newKey, setNewKey] = useState<HDNodeWallet>()
+  const [list, setList] = useState<IKey[]>([])
   const address = newKey?.address.replace('0x', '').toLowerCase() || ''
+  const auth = useAppSelector(selectAuth)
 
   return (
     <Modal
@@ -24,7 +26,7 @@ export function KeysManagementModal({
       onHide={handleClose}
       onShow={async () => {
         setNewKey(undefined)
-        setList((await accessKeyList(getAuthData()!)).list)
+        setList((await accessKeyList(auth)).list)
       }}
     >
       <Modal.Header closeButton>
@@ -85,6 +87,7 @@ export function KeysManagementModal({
       </Modal.Body>
       <Modal.Footer>
         <Button
+          disabled={!newKey}
           variant="primary"
           size="sm"
           onClick={async () => {

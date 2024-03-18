@@ -1,17 +1,13 @@
-import { SignInButton, StatusAPIResponse, useProfile } from '@farcaster/auth-kit'
-import React, { useEffect, useState } from 'react'
-import { getAuthData, saveAuthData } from '../service/storage'
-import { AuthData, userUpsert } from '../service/api'
+import { SignInButton, StatusAPIResponse } from '@farcaster/auth-kit'
+import React from 'react'
+import { saveAuthData } from '../service/storage'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { logout, selectAuth } from '../redux/reducers/authSlice'
+import { onLogin } from '../utils/farcaster'
 
 export function Header() {
-  const profile = useProfile()
-  const [authData, setAuthData] = useState<AuthData>()
-  const isAuth = profile.isAuthenticated || authData
-  const username = profile.profile.username || authData?.username || undefined
-
-  useEffect(() => {
-    setAuthData(getAuthData())
-  }, [])
+  const dispatch = useAppDispatch()
+  const auth = useAppSelector(selectAuth)
 
   return (
     <header>
@@ -26,51 +22,29 @@ export function Header() {
               <ul className="navbar-nav gap-2 mx-lg-auto" />
 
               <div className="navbar-nav align-items-lg-center justify-content-end gap-2 ms-lg-4 w-lg-64">
-                {!isAuth && (
+                {!auth.isAuthenticated && (
                   <a
                     className="sign-in-header nav-item nav-link rounded-pill d-none d-lg-block"
                     href="#"
                     onClick={e => e.preventDefault()}
                   >
-                    <SignInButton
-                      onSuccess={(res: StatusAPIResponse) => {
-                        const { message, signature, nonce, username } = res
-                        if (!message || !signature || !nonce || !username) {
-                          console.log('sign in info', res)
-                          alert('Incorrect auth information. Cannot sign in.')
-                          return
-                        }
-
-                        saveAuthData({
-                          message,
-                          signature,
-                          nonce,
-                          username,
-                        })
-                        userUpsert({
-                          message,
-                          signature,
-                          nonce,
-                          username,
-                        })
-                      }}
-                    />
+                    <SignInButton onSuccess={(res: StatusAPIResponse) => onLogin(dispatch, res)} />
                   </a>
                 )}
 
-                {isAuth && (
+                {auth.isAuthenticated && (
                   <a
                     className="sign-in-header nav-item nav-link rounded-pill d-none d-lg-block"
                     href="#"
                     onClick={e => {
                       e.preventDefault()
                       if (window.confirm('Logout?')) {
+                        dispatch(logout())
                         saveAuthData()
-                        window.location.reload()
                       }
                     }}
                   >
-                    {username && <p>Hello, @{username}</p>}
+                    {auth.username && <p>Hello, @{auth.username}</p>}
                   </a>
                 )}
               </div>

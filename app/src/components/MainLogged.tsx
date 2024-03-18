@@ -1,23 +1,24 @@
-import React, { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { KeysManagementModal } from './KeysManagementModal'
 import { accessKeyAdd, frameAdd, frameList, IFrame, IFrameCreation } from '../service/api'
-import { getAuthData } from '../service/storage'
 import { FramesList } from './FramesList'
 import { FramesManagementModal } from './FramesManagementModal'
-import { extractFidFromMessage } from '../utils/farcaster'
+import { useAppSelector } from '../redux/hooks'
+import { selectAuth } from '../redux/reducers/authSlice'
 
 export function MainLogged() {
-  const [showKeysModal, setShowKeysModal] = React.useState(false)
-  const [showFramesModal, setShowFramesModal] = React.useState(false)
-  const [frames, setFrames] = React.useState<IFrame[]>([])
+  const [showKeysModal, setShowKeysModal] = useState(false)
+  const [showFramesModal, setShowFramesModal] = useState(false)
+  const [frames, setFrames] = useState<IFrame[]>([])
+  const auth = useAppSelector(selectAuth)
 
-  async function updateFrames() {
-    setFrames((await frameList(getAuthData()!)).list)
-  }
+  const updateFrames = useCallback(async () => {
+    setFrames((await frameList(auth)).list);
+  }, [auth, setFrames]);
 
   useEffect(() => {
     updateFrames().then()
-  }, [])
+  }, [updateFrames])
 
   return (
     <main>
@@ -53,30 +54,18 @@ export function MainLogged() {
           setShowKeysModal(false)
         }}
         onSave={async (keyId: string) => {
-          const authData = getAuthData()
-          if (!authData) {
-            alert('No auth data found')
-            return
-          }
-
-          await accessKeyAdd(keyId, authData)
+          await accessKeyAdd(keyId, auth)
         }}
       />
 
       <FramesManagementModal
-        fid={extractFidFromMessage(getAuthData()!.message)}
+        fid={auth.fid}
         show={showFramesModal}
         handleClose={() => {
           setShowFramesModal(false)
         }}
         onSave={async (data: IFrameCreation) => {
-          const authData = getAuthData()
-          if (!authData) {
-            alert('No auth data found')
-            return
-          }
-
-          const insertInfo = await frameAdd(data, authData)
+          const insertInfo = await frameAdd(data, auth)
           await updateFrames()
           // @ts-ignore
           if (insertInfo.status !== 'ok') {

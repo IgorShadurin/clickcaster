@@ -1,7 +1,11 @@
-import { SignInButton } from '@farcaster/auth-kit'
+import { SignInButton, StatusAPIResponse } from '@farcaster/auth-kit'
 import React from 'react'
+import { onLogin } from '../utils/farcaster'
+import { useAppDispatch } from '../redux/hooks'
 
 export function MainNoAuth() {
+  const dispatch = useAppDispatch()
+
   return (
     <main>
       <div className="pt-56 pb-10 pt-lg-56 pb-lg-0 mt-n40 position-relative gradient-bottom-right start-indigo middle-purple end-yellow">
@@ -17,12 +21,12 @@ export function MainNoAuth() {
               </p>
 
               <div className="d-block d-md-none d-flex justify-content-center align-items-center mt-5">
-                <SignInButton />
+                <SignInButton onSuccess={(res: StatusAPIResponse) => onLogin(dispatch, res)} />
               </div>
             </div>
           </div>
           <div className="mt-10 d-none d-lg-block pb-5">
-            <img src="/preview-1.png" />
+            <img src="/preview-1.png" alt="Preview" />
           </div>
         </div>
       </div>
