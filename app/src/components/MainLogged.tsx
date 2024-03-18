@@ -39,7 +39,7 @@ export function MainLogged() {
               setShowKeysModal(true)
             }}
           >
-            <i className="bi bi-key"></i> Add key
+            <i className="bi bi-key"></i> Add Key
           </button>
 
           <div className="mt-8">
