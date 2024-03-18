@@ -32,7 +32,53 @@ With the traffic exchange platform, Frames developers can exchange users, which 
 
 - Each traffic provider uses a unique cryptographic key, enabling us to identify both the traffic initiator and provider. This ensures that every click is verifiable, contributing to high-quality analytics and fraud prevention.
 
-## Start the server
+## Integration
+
+1. Create a key on the website. Click "Add Key", "Create Key". Copy the ID and PK to yourself. Click "Save".
+2. Insert the following script into your Warpcast request handling method.
+
+Install ethers or a similar library.
+
+```shell
+npm i ethers
+```
+
+For node <18
+
+```shell
+npm i node-fetch
+```
+
+```typescript
+import { Wallet } from 'ethers'
+import node from 'node-fetch' // for node <18
+
+async function clickLog(signer: Wallet, clickData: string): Promise<unknown> {
+  const signature = await signer.signMessage(clickData)
+
+  return (
+    await fetch('https://api.clickcaster.xyz/v1/click/log', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ clickData, signature }),
+    })
+  ).json()
+}
+
+// your PK from the dashboard
+const signer = new Wallet('PK_STRING')
+// raw click data in the form of hex (req.body.trustedData.messageBytes)
+const clickData = 'RAW_CLICK_DATA_IN_FORM_OF_HEX'
+clickLog(signer, clickData).then(console.log).catch(console.log)
+```
+
+3. Register your application's unique URL on the website. Click "Add Frame". Copy the unique tag for your account. Insert it on the main page of your Frame, accessible via a GET request. Fill in the fields and click "Save".
+
+## Development
+
+### Start the server
 
 ```shell
 # install dependencies
@@ -62,7 +108,7 @@ npx pm2 start npm --name "Warpcast Traffic" -- run start
 npm run start
 ```
 
-## Development
+### Create migration
 
 ```shell
 # create new migration
