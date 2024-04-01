@@ -1,4 +1,6 @@
-# Warpcast Frames Traffic Exchange
+# ClickCaster
+
+ClickCaster is a traffic exchange and analytics service for Frames in Farcaster.
 
 Warpcast is a social network on Optimism with support for Solana wallets and more than 200k users. 
 
