@@ -10,7 +10,7 @@ import { setConfigData } from '../../src/config'
 const testDb = knex(configurations.development)
 
 describe('Access Key', () => {
-  setConfigData({ klaviyoApiKey: '', klaviyoListId: '', neynarApiKey: '', publicUrl: '', appDomain: 'clickcaster.xyz' })
+  setConfigData({ neynarApiKey: '', publicUrl: '', appDomain: 'clickcaster.xyz' })
   const correctData: IAddRequest = {
     key: 'A5e09251e03b6956dAD68D3532842723457Bd886',
     message:

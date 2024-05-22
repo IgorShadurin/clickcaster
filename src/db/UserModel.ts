@@ -83,10 +83,7 @@ export async function getUserByFid(fid: number): Promise<IUser> {
  * @returns The count of users with is_clickcaster === true.
  */
 export async function getCountOfClickcasters(): Promise<number> {
-  const result = await db(TABLE_NAME)
-    .where('is_clickcaster', true)
-    .count({ count: '*' })
-    .first();
+  const result = await db(TABLE_NAME).where('is_clickcaster', true).count({ count: '*' }).first()
 
-  return Number(result?.count) || 0;
+  return Number(result?.count) || 0
 }
