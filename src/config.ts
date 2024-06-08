@@ -18,6 +18,10 @@ export interface IConfigData {
    * App domain
    */
   appDomain: string
+  /**
+   * Trusted provider ETH address for frames adding
+   */
+  providerEthAddress: string
 }
 
 /**
@@ -27,6 +31,7 @@ let configData: IConfigData = {
   neynarApiKey: '',
   publicUrl: '',
   appDomain: '',
+  providerEthAddress: '',
 }
 
 /**
@@ -45,9 +50,14 @@ export function loadConfig(): void {
     throw new Error('THE_APP_DOMAIN env variable not set')
   }
 
+  if (!process.env.PROVIDER_ETH_ADDRESS) {
+    throw new Error('PROVIDER_ETH_ADDRESS env variable not set')
+  }
+
   configData.neynarApiKey = process.env.NEYNAR_API_KEY
   configData.publicUrl = process.env.PUBLIC_URL
   configData.appDomain = process.env.THE_APP_DOMAIN
+  configData.providerEthAddress = process.env.PROVIDER_ETH_ADDRESS
 }
 
 /**
