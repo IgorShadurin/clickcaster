@@ -1,3 +1,5 @@
+export const PROVIDER_FRAME_DESCRIPTION = 'Frame added through the DappyKit Auth system.'
+
 /**
  * Sleep for a given amount of time in milliseconds
  * @param timeMs Time to sleep in milliseconds

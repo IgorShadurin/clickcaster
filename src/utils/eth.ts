@@ -37,3 +37,11 @@ export function is0xEthSignature(value: unknown): value is string {
 export function getBytes32Hash(data: string): string {
   return ethers.keccak256(ethers.toUtf8Bytes(data))
 }
+
+/**
+ * Prepares the Ethereum address by removing the 0x prefix and converting it to lowercase.
+ * @param address Ethereum address
+ */
+export function prepareEthAddress(address: string): string {
+  return address.replace(/^0x/, '').toLowerCase()
+}
