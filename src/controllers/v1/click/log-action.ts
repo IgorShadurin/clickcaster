@@ -15,6 +15,7 @@ export default async (
 
     res.json({ status: 'ok' })
   } catch (e) {
+    console.error('click/log error', e, req.body) // eslint-disable-line no-console
     next(e)
   }
 }
