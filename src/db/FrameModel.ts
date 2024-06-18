@@ -21,6 +21,16 @@ export interface IFrame {
   updated_at: Date
 }
 
+/**
+ * Imported frames from DappyKit
+ */
+export interface IImportedFrames {
+  /**
+   * User ID => Frames
+   */
+  [key: number]: IFrame[]
+}
+
 export type IFrameData = Omit<IFrame, 'id' | 'created_at' | 'updated_at'>
 
 /**
@@ -118,4 +128,34 @@ export async function getFrameById(frameId: bigint): Promise<IFrame> {
   }
 
   return result
+}
+
+/**
+ * Retrieves and groups frames by frame owner ID, filtered by title.
+ * Frames from the specified frame_owner_id values in the ignore list will be excluded.
+ * @param filterTitle The title filter for frames (default: '%[Imported from DK]%').
+ * @param ignoreOwners The array of frame_owner_id values to ignore (default: [354669]).
+ * @returns An object where the key is the frame owner ID and the value is an array of frames.
+ */
+export async function getImportedFrames(
+  filterTitle: string = '%[Imported from DK]%',
+  ignoreOwners: number[] = [354669],
+): Promise<IImportedFrames> {
+  const result = await db(TABLE_NAME).where('title', 'like', filterTitle).whereNotIn('frame_owner_id', ignoreOwners)
+
+  const groupedFrames: IImportedFrames = {}
+
+  result.forEach((frame: IFrame) => {
+    const ownerId = Number(frame.frame_owner_id)
+
+    if (!groupedFrames[ownerId]) {
+      groupedFrames[ownerId] = []
+    }
+    groupedFrames[ownerId].push({
+      ...frame,
+      frame_owner_id: BigInt(frame.frame_owner_id),
+    })
+  })
+
+  return groupedFrames
 }
