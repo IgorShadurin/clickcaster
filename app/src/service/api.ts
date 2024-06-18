@@ -53,6 +53,24 @@ export interface IStataResponse {
   stata: IStata
 }
 
+export interface IPublicFramesStata {
+  /**
+   * User FID
+   */
+  [key: number]: {
+    /**
+     * Frame ID
+     */
+    [key: number]: { unique: number; all: number }
+  }
+}
+
+export interface IPublicStataResponse {
+  status: string
+  stata: IPublicFramesStata
+  sortedOwnerIds: number[]
+}
+
 /**
  * Get URL
  * @param path The path
@@ -152,6 +170,17 @@ export async function userUpsert(auth: AuthData): Promise<unknown> {
 export async function appStata(): Promise<IStataResponse> {
   return (
     await fetch(getUrl('v1/app/stata'), {
+      method: 'GET',
+    })
+  ).json()
+}
+
+/**
+ * Get app stat
+ */
+export async function topStata(): Promise<IPublicStataResponse> {
+  return (
+    await fetch(getUrl('v1/app/top-stata'), {
       method: 'GET',
     })
   ).json()
