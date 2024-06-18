@@ -34,7 +34,7 @@ export function TopFramesModal({ show, handleClose }: { show: boolean; handleClo
             <thead>
             <tr>
               <th>#</th>
-              <th>Owner ID</th>
+              <th>Owner FID</th>
               <th>Frame ID</th>
               <th>Unique Visitors</th>
               <th>All Visitors</th>
