@@ -6,6 +6,7 @@ const NAMESPACE = 'clicks_ns'
 const EXPECTED_CLICK_TO = 'expected_click_to'
 const UNIQUE_CLICK = 'unique_click'
 const STATA = 'stata'
+const PUBLIC_FRAMES_STATA = 'public_frames_stata'
 
 /**
  * Click allowed time in minutes
@@ -119,4 +120,19 @@ export async function setStata(data: string): Promise<void> {
  */
 export async function getStata(): Promise<string | undefined> {
   return memcachedGet(getKey(STATA))
+}
+
+/**
+ * Set public frames stata
+ * @param data Data with stata
+ */
+export async function setPublicFramesStata(data: string): Promise<void> {
+  await memcachedSet(getKey(PUBLIC_FRAMES_STATA), data, STATA_EXPIRATION_SECONDS)
+}
+
+/**
+ * Get public frames stata
+ */
+export async function getPublicFramesStata(): Promise<string | undefined> {
+  return memcachedGet(getKey(PUBLIC_FRAMES_STATA))
 }

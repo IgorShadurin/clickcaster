@@ -132,3 +132,42 @@ export async function getTotalVisitorsAndUniqueVisitors(): Promise<{
     return { totalAllVisitors: BigInt(0), totalUniqueVisitors: BigInt(0) }
   }
 }
+
+/**
+ * Retrieves cumulative statistics for a list of frame IDs within a date range.
+ * @param frameIds The list of frame IDs to query.
+ * @param dateFrom The start date of the range.
+ * @param dateTo The end date of the range.
+ */
+export async function getCumulativeStats(
+  frameIds: bigint[],
+  dateFrom: string,
+  dateTo: string,
+): Promise<IFramesStatistics> {
+  const stats = await db(TABLE_NAME)
+    .whereIn(
+      'frame_id',
+      frameIds.map(id => id.toString()),
+    )
+    .whereBetween('stata_date', [dateFrom, dateTo])
+    .groupBy('frame_id')
+    .select('frame_id')
+    .select(db.raw('SUM(all_visitors) as totalAllVisitors, SUM(unique_visitors) as totalUniqueVisitors'))
+
+  // Initialize the result object with all frame IDs set to zero statistics
+  const result: IFramesStatistics = frameIds.reduce<IFramesStatistics>((acc, frameId) => {
+    acc[frameId.toString()] = { totalAllVisitors: BigInt(0), totalUniqueVisitors: BigInt(0) }
+
+    return acc
+  }, {})
+
+  // Populate the result object with actual statistics from the query
+  stats.forEach(stat => {
+    result[stat.frame_id.toString()] = {
+      totalAllVisitors: BigInt(stat.totalAllVisitors),
+      totalUniqueVisitors: BigInt(stat.totalUniqueVisitors),
+    }
+  })
+
+  return result
+}

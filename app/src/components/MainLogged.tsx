@@ -5,10 +5,12 @@ import { FramesList } from './FramesList'
 import { FramesManagementModal } from './FramesManagementModal'
 import { useAppSelector } from '../redux/hooks'
 import { selectAuth } from '../redux/reducers/authSlice'
+import { TopFramesModal } from './TopFramesModal'
 
 export function MainLogged() {
   const [showKeysModal, setShowKeysModal] = useState(false)
   const [showFramesModal, setShowFramesModal] = useState(false)
+  const [topFramesModal, setTopFramesModal] = useState(false)
   const [frames, setFrames] = useState<IFrame[]>([])
   const auth = useAppSelector(selectAuth)
 
@@ -40,6 +42,15 @@ export function MainLogged() {
             }}
           >
             <i className="bi bi-key"></i> Add Key
+          </button>
+
+          <button
+            className="btn btn-outline-primary btn-xs"
+            onClick={() => {
+              setTopFramesModal(true)
+            }}
+          >
+            <i className="bi"></i> Top Frames
           </button>
 
           <div className="mt-8">
@@ -74,6 +85,13 @@ export function MainLogged() {
           }else {
             return ''
           }
+        }}
+      />
+
+      <TopFramesModal
+        show={topFramesModal}
+        handleClose={() => {
+          setTopFramesModal(false)
         }}
       />
     </main>
