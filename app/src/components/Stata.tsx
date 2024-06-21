@@ -1,4 +1,5 @@
 import { IStata } from '../service/api'
+import { formatClicks } from '../utils/number'
 
 export function Stata({ stata }: { stata: IStata }) {
   return (
@@ -10,7 +11,7 @@ export function Stata({ stata }: { stata: IStata }) {
             <div className="row mx-n2 mt-12">
               <div className="col-sm-3 mb-3 mb-sm-0">
                 <h2 className="text-secondary mb-1">
-                  <span className="display-6 fw-semibold">{stata.all_clicks}</span>
+                  <span className="display-6 fw-semibold">{formatClicks(stata.all_clicks)}</span>
                   <span className="counter-extra">+</span>
                 </h2>
                 <p className="text-muted">Clicks Handled</p>

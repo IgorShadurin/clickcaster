@@ -13,11 +13,11 @@ export function MainNoAuth() {
           <div className="row align-items-center g-10">
             <div className="col-lg-8">
               <h1 className="ls-tight fw-bolder display-3 text-white mb-5">
-                Exchange Web3 users. Connect your Warpcast Frame.
+                Web3 ads in Farcaster. Connect your Frame to earn.
               </h1>
               <p className="w-xl-75 lead text-white">
-                Exchange Web3 traffic with other users connected to the system. The platform allows you to monitor the
-                activity dynamics of your Frames.
+                Purchase and sell Web3 ads within Farcaster mini-apps. Connect with other users to exchange Web3
+                traffic. Use the platform to monitor the activity dynamics of your Frames.
               </p>
 
               <div className="d-block d-md-none d-flex justify-content-center align-items-center mt-5">
